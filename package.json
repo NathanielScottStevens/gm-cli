@@ -1,0 +1,22 @@
+{
+  "name": "gm-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NathanielScottStevens/gm-cli.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NathanielScottStevens/gm-cli/issues"
+  },
+  "homepage": "https://github.com/NathanielScottStevens/gm-cli#readme",
+  "dependencies": {
+    "vorpal": "^1.11.4"
+  }
+}
