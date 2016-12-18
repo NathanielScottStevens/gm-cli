@@ -1,7 +1,5 @@
 var vorpal = require('vorpal')();
-
-var cities = ['Vandalia', 'Columbus'];
-var characters = ['Nathaniel', 'Alyssa'];
+var server = require('./server.js');
 
 vorpal
   .delimiter('gm$')
@@ -9,34 +7,47 @@ vorpal
 
 vorpal
   .command('ls <type>', 'Shows a list')
-  .autocomplete(['city', 'character'])
+  .autocomplete(['cities', 'characters'])
   .action(function(args, callback) {
     switch(args.type) {
-      case 'city':
-        for(var i = 0; i < cities.length; i++) {
-          this.log(cities[i]);
-        }
-        break;
-      case 'character':
-        for(var i = 0; i < characters.length; i++) {
-          this.log(characters[i]);
-        }
-        break
+      case 'characters':
+        return new Promise(function(resolve, reject) {
+          server.getAll('characters', function(items) {
+            vorpal.log('***** CHARACTERS *****');
+            for(var i = 0; i < items.length; i++) {
+              vorpal.log(items[i]);
+            }
+            resolve();
+          });
+        });
+      case 'cities':
+        return new Promise(function(resolve, reject) {
+          server.getAll('cities', function(items) {
+            vorpal.log('***** CITIES *****');
+            for(var i = 0; i < items.length; i++) {
+              vorpal.log(items[i]);
+            }
+            resolve();
+          });
+        });
     }
     callback();
   });
 
 vorpal
-  .command('add <type> <name>', 'Add an item')
-  .autocomplete(['city', 'character'])
+  .command('add city <name>', 'Add a city')
   .action(function(args, callback) {
-    switch(args.type) {
-      case 'city':
-        cities.push(args.name);
-        break;
-      case 'character':
-        characters.push(args.name);
-        break;
-    }
+    server.insertNew('cities', args.name);
     callback();
-  })
+  });
+
+vorpal
+  .command('add character <name>', 'Add a city')
+  .option('-a, --age <age>', 'Age of character.')
+  .action(function(args, callback) {
+    server.insertNew('characters', {
+      name: args.name,
+      age: args.options.age,
+    });
+    callback();
+  });
