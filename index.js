@@ -44,7 +44,8 @@ vorpal
 
 vorpal
   .command('add city <name>', 'Add a city')
-  .option('-p, --population <level>', 'Population of city')
+  .option('-p, --population <level>', 'Population of city.')
+  .option('-r, --region <region>', 'Region of city.')
   .action(function(args, callback) {
     server.insertNew('cities', {
       _id: args.name,
@@ -53,17 +54,37 @@ vorpal
     callback();
   });
 
+  vorpal
+    .command('add region <name>', 'Add a region')
+    .action(function(args, callback) {
+      server.insertNew('regions', {
+        _id: args.name,
+      });
+      callback();
+    });
+
+
 vorpal
-  .command('add character <name>', 'Add a city')
+  .command('add character <name>', 'Add a character')
   .option('-a, --age <age>', 'Age of character.')
   .option('-f, --female', 'Sets gender to female. Defaults to male.')
   .option('-l, --location <location>', 'Location of character.')
+  .option('-str, --strength <dieType>', 'Strenth of character.')
+  .option('--agility <dieType>', 'Strenth of character.')
+  .option('--smarts <dieType>', 'Strenth of character.')
+  .option('--spirit <dieType>', 'Strenth of character.')
+  .option('--vigor <dieType>', 'Strenth of character.')
   .action(function(args, callback) {
     server.insertNew('characters', {
       _id: args.name,
       age: args.options.age,
       gender: args.options.female ? 'f' : 'm',
       location: args.options.location,
+      strength: args.options.strength ? args.options.strength : 6,
+      agility: args.options.agility ? args.options.agility : 6,
+      smarts: args.options.smarts ? args.options.smarts : 6,
+      spirit: args.options.spirit ? args.options.spirit : 6,
+      vigor: args.options.vigor ? args.options.vigor : 6,
     });
     this.log(args);
     callback();
@@ -78,7 +99,7 @@ vorpal
 
 vorpal
   .command('set <collection> <id> <property> <value>', 'Edit key value pair.')
-  .autocomplete(['cities', 'characters'])
+  .autocomplete(['cities', 'characters', 'regions'])
   .action(function(args, callback) {
     server.update(args.collection, args.id, args.property, args.value);
     callback();
