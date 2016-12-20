@@ -65,5 +65,21 @@ vorpal
       gender: args.options.female ? 'f' : 'm',
       location: args.options.location,
     });
+    this.log(args);
+    callback();
+  });
+
+vorpal
+  .command('push <collection> <id> <property> <value>', 'Pushes value to field')
+  .action(function(args, callback) {
+    server.push(args.collection, args.id, args.property, args.value);
+    callback();
+  });
+
+vorpal
+  .command('set <collection> <id> <property> <value>', 'Edit key value pair.')
+  .autocomplete(['cities', 'characters'])
+  .action(function(args, callback) {
+    server.update(args.collection, args.id, args.property, args.value);
     callback();
   });
