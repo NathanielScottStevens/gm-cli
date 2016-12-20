@@ -1,5 +1,13 @@
 var vorpal = require('vorpal')();
+var cliff = require('cliff');
+
 var server = require('./server.js');
+var skills = require('./skills.js');
+
+function logHeader(text) {
+  vorpal.log('******** ' + text.toUpperCase() + ' ********');
+  vorpal.log('');
+}
 
 vorpal
   .delimiter('gm$')
@@ -7,47 +15,55 @@ vorpal
 
 vorpal
   .command('ls <type>', 'Shows a list')
-  .autocomplete(['cities', 'characters'])
+  .autocomplete(['cities', 'characters', 'skills'])
   .action(function(args, callback) {
     switch(args.type) {
       case 'characters':
         return new Promise(function(resolve, reject) {
           server.getAll('characters', function(items) {
-            vorpal.log('***** CHARACTERS *****');
-            for(var i = 0; i < items.length; i++) {
-              vorpal.log(items[i]);
-            }
+            logHeader('characters');
+            vorpal.log(cliff.stringifyObjectRows(items, ['_id', 'age', 'gender', 'location']));
             resolve();
           });
         });
       case 'cities':
         return new Promise(function(resolve, reject) {
           server.getAll('cities', function(items) {
-            vorpal.log('***** CITIES *****');
-            for(var i = 0; i < items.length; i++) {
-              vorpal.log(items[i]);
-            }
+            logHeader('cities');
+            vorpal.log(cliff.stringifyObjectRows(items, ['_id', 'population']));
             resolve();
           });
         });
+      case 'skills':
+        logHeader('skills');
+        this.log(cliff.stringifyObjectRows(skills, ['_id', 'attribute']));
+        break;
     }
     callback();
   });
 
 vorpal
   .command('add city <name>', 'Add a city')
+  .option('-p, --population <level>', 'Population of city')
   .action(function(args, callback) {
-    server.insertNew('cities', args.name);
+    server.insertNew('cities', {
+      _id: args.name,
+      population: args.options.population,
+    });
     callback();
   });
 
 vorpal
   .command('add character <name>', 'Add a city')
   .option('-a, --age <age>', 'Age of character.')
+  .option('-f, --female', 'Sets gender to female. Defaults to male.')
+  .option('-l, --location <location>', 'Location of character.')
   .action(function(args, callback) {
     server.insertNew('characters', {
-      name: args.name,
+      _id: args.name,
       age: args.options.age,
+      gender: args.options.female ? 'f' : 'm',
+      location: args.options.location,
     });
     callback();
   });

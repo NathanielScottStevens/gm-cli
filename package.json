@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "mongo": "C:/\"Program Files\"/MongoDB/Server/3.4/bin/mongod.exe --dbpath db",
+    "mongod": "mongod --dbpath db",
+    "mongo": "mongo",
     "s": "node index.js"
   },
   "repository": {
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/NathanielScottStevens/gm-cli#readme",
   "dependencies": {
+    "cliff": "^0.1.10",
     "mongodb": "^2.2.16",
     "vorpal": "^1.11.4"
   }
