@@ -1,12 +1,23 @@
 var vorpal = require('vorpal')();
 var cliff = require('cliff');
+var cliFormat = require('cli-format');
+var pad = require('pad');
 
 var server = require('./server.js');
 var skills = require('./skills.js');
 
 function logHeader(text) {
   vorpal.log('******** ' + text.toUpperCase() + ' ********');
+}
+
+function viewCharacter(character) {
+  logHeader(character._id.replace('_', ' '));
   vorpal.log('');
+  vorpal.log(pad('Strength', 12) + pad(character.strength.toString(), 5));
+  vorpal.log(pad('Agility', 12) + pad(character.agility.toString(), 5));
+  vorpal.log(pad('Spirit', 12) + pad(character.spirit.toString(), 5));
+  vorpal.log(pad('Smarts', 12) + pad(character.smarts.toString(), 5));
+  vorpal.log(pad('Vigor', 12) + pad(character.vigor.toString(), 5));
 }
 
 vorpal
@@ -103,4 +114,12 @@ vorpal
   .action(function(args, callback) {
     server.update(args.collection, args.id, args.property, args.value);
     callback();
+  });
+
+vorpal
+  .command('view character <id>', 'View character.')
+  .action(function(args, callback) {
+    server.get('characters', args.id, function(character) {
+      viewCharacter(character);
+    });
   });

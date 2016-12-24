@@ -29,6 +29,21 @@ module.exports.getAll = function(collection, callback) {
   });
 }
 
+module.exports.get = function(collection, id, callback) {
+  MongoClient.connect(url, function(err, db) {
+    var collectionRef = db.collection(collection);
+    collectionRef.findOne({ _id: id }, function(err, obj) {
+      if (err) {
+        vorpal.log(err);
+      } else {
+        callback(obj);
+      }
+
+      db.close();
+    });
+  });
+}
+
 module.exports.update = function(collection, id, property, value) {
   MongoClient.connect(url, function(err, db) {
     var collectionRef = db.collection(collection);

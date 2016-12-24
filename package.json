@@ -19,8 +19,10 @@
   },
   "homepage": "https://github.com/NathanielScottStevens/gm-cli#readme",
   "dependencies": {
+    "cli-format": "^3.0.9",
     "cliff": "^0.1.10",
     "mongodb": "^2.2.16",
+    "pad": "^1.0.2",
     "vorpal": "^1.11.4"
   }
 }
